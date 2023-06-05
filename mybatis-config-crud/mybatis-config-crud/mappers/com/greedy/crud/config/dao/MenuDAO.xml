@@ -5,32 +5,64 @@
     
 <mapper namespace="com.greedy.crud.config.dao.MenuDAO">
 
-	<!-- 조회할 컬럼과 DTO를 매핑시키기 위한 설정 -->
-	<resultMap  id="MenuResultMap" type="com.greedy.crud.config.DTO.MenuDTO"> <!--프라이머리키 설정 -->
-		<id property = "postingNo" column = "POSTING_NO"/>
-		<result property="categoryNo" column="CATEGORY_NO"/> <!-- 속성에 코드에다가 메뉴코드를 넣어준다. -->
-		<result property="blogNum" column="BLOG_NUM"/> <!-- 키 중복이 안된다. value는 중복이 된다. -->
-		<result property="postingTitle" column="POSTING_TITLE"/>
-		<result property="postringContent" column="POSTING_CONTETNT"/>
-		<result property="postingTime" column="POSTING_TIME"/>
-		<result property="state" column="STATE"/> 
-	</resultMap>
+   <!-- 조회할 컬럼과 DTO를 매핑시키기 위한 설정 -->
+   <resultMap  id="MenuResultMap" type="com.greedy.crud.config.DTO.MenuDTO"> <!--프라이머리키 설정 -->
+      <id property = "postingNo" column = "POSTING_NO"/>
+      <result property="categoryNo" column="CATEGORY_NO"/> <!-- 속성에 코드에다가 메뉴코드를 넣어준다. -->
+      <result property="blogNum" column="BLOG_NUM"/> <!-- 키 중복이 안된다. value는 중복이 된다. -->
+      <result property="postingTitle" column="POSTING_TITLE"/>
+      <result property="postringContent" column="POSTING_CONTETNT"/>
+      <result property="postingTime" column="POSTING_TIME"/>
+      <result property="state" column="STATE"/> 
+   </resultMap>
 
-	<select id="selectAllMenu" resultMap = "MenuResultMap">	<!-- result type -->
-		SELECT
-				*
-	      FROM POSTING
-	     WHERE STATE = 'Y'
-	</select>
-	
-	<select id="selectPostinByNo" resultMap="MenuResultMap">
-		SELECT
-				POSTING_TITLE ,
-				POSTING_CONTETNT
-		  FROM  POSTING
-		 WHERE  POSTING_NO = #{ postingNo }
-	
-	</select>
+   <select id="selectAllMenu" resultMap = "MenuResultMap">   <!-- result type -->
+      SELECT
+            *
+         FROM POSTING
+        WHERE STATE = 'Y'
+   </select>
+   
+   <select id="selectPostinByNo" resultMap="MenuResultMap">
+      SELECT
+        	  POSTING_TITLE ,
+         	  POSTING_CONTETNT
+        FROM  POSTING
+       WHERE  POSTING_NO = #{ postingNo }
+   </select>
+   
+   <insert id="insertPosting" parameterType="com.greedy.crud.config.DTO.MenuDTO">
+      INSERT
+         INTO POSTING
+         (
+             POSTING_NO,
+             BLOG_NUM,
+             POSTING_TITLE,
+             POSTING_CONTETNT,
+             CATEGORY_NO,
+             STATE
+         )
+         VALUES
+         (
+			#{ postingNo },
+            #{ blogNum },
+            #{ postingTitle },
+            #{ postringContent },
+            #{ categoryNo },
+            'Y'
+         )
+   </insert>
+   
+   <update id="modifyPosting" parameterType="com.greedy.crud.config.DTO.ModifyMenuDTO">
+      UPDATE POSTING
+         SET POSTING_TITLE = #{ postingTitle },
+               POSTING_CONTETNT = #{ postringContent },
+               CATEGORY_NO = #{ categoryNo }
+       WHERE POSTING_NO = #{ postingNo }
+   </update>
 
-	
+   <delete id="removePosting">
+      DELETE POSTING
+       WHERE POSTING_NO = #{ postingNo }
+   </delete>
 </mapper>
